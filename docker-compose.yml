@@ -1,0 +1,11 @@
+version: "3.6"
+
+services:
+  python:
+    build:
+      context: .
+      dockerfile: ./docker/development/Dockerfile
+    tty: true
+    working_dir: /scrapper
+    volumes:
+      - ./:/scrapper:Z
