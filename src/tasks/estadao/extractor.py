@@ -27,4 +27,9 @@ class EstadaoWebcrawler(Webcrawler):
         topic = article.h2.text.strip()
         photo = article.figure.a.img.get('data-src-desktop')
 
+        '''
+        TODO - Entrar na url da notícia e obter informações que o card
+        não tem como, subtítulo, autor e data/hora de postagem
+        '''
+
         return (url, title, topic, photo)
