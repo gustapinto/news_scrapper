@@ -28,8 +28,19 @@ class EstadaoWebcrawler(Webcrawler):
         photo = article.figure.a.img.get('data-src-desktop')
 
         '''
-        TODO - Entrar na url da notícia e obter informações que o card
-        não tem como, subtítulo, autor e data/hora de postagem
-        '''
+        TODO
 
-        return (url, title, topic, photo)
+        OBS: Essa obtenção de dados só funciona em alguns subsites do
+        portal estadão, é preciso encapsular ela em uma função com uma
+        strategy que obtém dados de diferentes maneiras a partir da
+        url do portal
+        '''
+        r = get(url)
+        soup = BeautifulSoup(r.text, features='html.parser')
+
+        infodiv = soup.find('div', class_='n--noticia__state-title')
+
+        author = infodiv.text.split(',')[0].strip() if infodiv else ''
+        date = infodiv.text.split(',')[1].strip if infodiv else ''
+
+        return (url, title, topic, photo, author, date)
