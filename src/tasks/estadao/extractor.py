@@ -29,6 +29,11 @@ class EstadaoWebcrawler(Webcrawler):
         hat = article.h2.text.strip()
         photo = article.figure.a.img.get('data-src-desktop')
 
+        author, topic = self.__get_intern_article_data(url)
+
+        return (topic, hat, title, url, photo, author)
+
+    def __get_intern_article_data(self, url: str) -> tuple:
         r = get(url)
         soup = BeautifulSoup(r.text, features='html.parser')
 
@@ -45,4 +50,4 @@ class EstadaoWebcrawler(Webcrawler):
             topics = headerdiv.find_all('li', class_='breadcrumb-item')
             topic = topics[-1].text.strip() if topics else None
 
-        return (topic, hat, title, url, photo, author)
+        return (author, topic)
