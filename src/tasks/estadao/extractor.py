@@ -1,3 +1,5 @@
+from hashlib import md5
+
 from requests import get
 from bs4 import BeautifulSoup
 
@@ -14,7 +16,7 @@ class EstadaoWebcrawler(Webcrawler):
         soup = BeautifulSoup(r.text, features='html.parser')
 
         articles = soup.find_all('article')
-        extracted_data = [self.__parse_article(article) for article in articles]
+        extracted_data = [self.__parse_article(article) for article in articles if article]
 
         return extracted_data
 
@@ -24,23 +26,23 @@ class EstadaoWebcrawler(Webcrawler):
 
         title = article.h3.text.strip()
         url = article.h3.a.get('href')
-        topic = article.h2.text.strip()
+        hat = article.h2.text.strip()
         photo = article.figure.a.img.get('data-src-desktop')
 
-        '''
-        TODO
-
-        OBS: Essa obtenção de dados só funciona em alguns subsites do
-        portal estadão, é preciso encapsular ela em uma função com uma
-        strategy que obtém dados de diferentes maneiras a partir da
-        url do portal
-        '''
         r = get(url)
         soup = BeautifulSoup(r.text, features='html.parser')
 
         infodiv = soup.find('div', class_='n--noticia__state-title')
+        headerdiv = soup.find('article', class_='n--noticia__header')
 
-        author = infodiv.text.split(',')[0].strip() if infodiv else ''
-        date = infodiv.text.split(',')[1].strip if infodiv else ''
+        author = None
+        if infodiv:
+            inforow = infodiv.text.split(',')
+            author = inforow[0].strip()
 
-        return (url, title, topic, photo, author, date)
+        topic = None
+        if headerdiv:
+            topics = headerdiv.find_all('li', class_='breadcrumb-item')
+            topic = topics[-1].text.strip() if topics else None
+
+        return (topic, hat, title, url, photo, author)
