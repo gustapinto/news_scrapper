@@ -1,5 +1,3 @@
-from hashlib import md5
-
 from requests import get
 from bs4 import BeautifulSoup
 
@@ -16,7 +14,8 @@ class EstadaoWebcrawler(Webcrawler):
         soup = BeautifulSoup(r.text, features='html.parser')
 
         articles = soup.find_all('article')
-        extracted_data = [self.__parse_article(article) for article in articles if article]
+        extracted_data = [self.__parse_article(article)
+                          for article in articles if article]
 
         return extracted_data
 
