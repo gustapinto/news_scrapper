@@ -10,7 +10,7 @@ class CnnBrasilWebcrawler(Webcrawler):
     def url(self) -> str:
         return 'https://www.cnnbrasil.com.br/'
 
-    def extract_data(self) -> list:
+    def extract_data(self) -> list[dict]:
         html = get(self.url)
         soup = BeautifulSoup(html.text, features='html.parser')
 
@@ -33,7 +33,16 @@ class CnnBrasilWebcrawler(Webcrawler):
 
         author, author_url = self.__get_intern_article_data(url)
 
-        return ('cnn', topic, hat, title, url, photo, author, author_url)
+        return {
+            'author': author,
+            'author_url': author_url,
+            'hat': hat,
+            'newspaper': 'cnn',
+            'photo': photo,
+            'title': title,
+            'topic': topic,
+            'url': url,
+        }
 
     def __get_intern_article_data(self, url: str) -> tuple:
         html = get(url)

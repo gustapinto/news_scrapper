@@ -9,7 +9,7 @@ class EstadaoWebcrawler(Webcrawler):
     def url(self) -> str:
         return 'https://www.estadao.com.br/'
 
-    def extract_data(self) -> list:
+    def extract_data(self) -> list[dict]:
         r = get(self.url)
         soup = BeautifulSoup(r.text, features='html.parser')
 
@@ -19,7 +19,7 @@ class EstadaoWebcrawler(Webcrawler):
 
         return extracted_data
 
-    def __parse_article(self, article) -> tuple | None:
+    def __parse_article(self, article) -> dict | None:
         if not article.h3 or not article.h3.a:
             return None
 
@@ -30,7 +30,15 @@ class EstadaoWebcrawler(Webcrawler):
 
         author, topic = self.__get_intern_article_data(url)
 
-        return ('estadao', topic, hat, title, url, photo, author)
+        return {
+            'author': author,
+            'hat': hat,
+            'newspaper': 'estadao',
+            'photo': photo,
+            'title': title,
+            'topic': topic,
+            'url': url,
+        }
 
     def __get_intern_article_data(self, url: str) -> tuple:
         r = get(url)
