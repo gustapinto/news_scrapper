@@ -26,4 +26,4 @@ class GloboWebcrawler(Webcrawler):
         topic = url.split(self.url)[1].split('/')[0]
         photo = article.img.get('src') if article.img else None
 
-        return (topic, hat, title, url, photo, None)
+        return ('globo', topic, hat, title, url, photo, None)

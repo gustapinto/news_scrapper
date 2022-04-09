@@ -30,7 +30,7 @@ class EstadaoWebcrawler(Webcrawler):
 
         author, topic = self.__get_intern_article_data(url)
 
-        return (topic, hat, title, url, photo, author)
+        return ('estadao', topic, hat, title, url, photo, author)
 
     def __get_intern_article_data(self, url: str) -> tuple:
         r = get(url)

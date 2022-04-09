@@ -19,5 +19,32 @@ class CnnBrasilWebcrawler(Webcrawler):
         lis = lambda section: section.ul.find_all('li')
 
         articles = flatten([lis(section) for section in sections])
+        extracted_data = [self.__parse_article(article)
+                          for article in articles if article]
 
-        return articles
+        return extracted_data
+
+    def __parse_article(self, article) -> dict:
+        url = article.a.get('href')
+        topic = url.split('.com.br/')[1].split('/')[0]
+        photo = article.a.img.get('src') if article.a.img else None
+        title = article.a.text.strip()
+        hat = article.a.span.text.capitalize() if article.a.span else None
+
+        author, author_url = self.__get_intern_article_data(url)
+
+        return ('cnn', topic, hat, title, url, photo, author, author_url)
+
+    def __get_intern_article_data(self, url: str) -> tuple:
+        html = get(url)
+        soup = BeautifulSoup(html.text, features='html.parser')
+
+        author_group = soup.find('span', class_='author__group')
+
+        if not author_group:
+            return (None, None)
+
+        author = author_group.a.text
+        author_url = author_group.a.get('href')
+
+        return (author, author_url)
