@@ -9,3 +9,25 @@ services:
     working_dir: /scrapper
     volumes:
       - ./:/scrapper:Z
+    env_file:
+      - .env
+    depends_on:
+      - mongo
+    networks:
+      - backend
+
+  mongo:
+    image: mongo
+    restart: always
+    ports:
+      - 27017:27017
+    volumes:
+      - ./db/:/data/db:Z
+    env_file:
+      - .env
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
