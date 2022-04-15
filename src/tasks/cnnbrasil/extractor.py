@@ -1,3 +1,5 @@
+from urllib.parse import unquote, urlparse
+
 from requests import get
 from bs4 import BeautifulSoup
 
@@ -26,7 +28,7 @@ class CnnBrasilWebcrawler(Webcrawler):
 
     def __parse_article(self, article) -> dict:
         url = article.a.get('href')
-        topic = url.split('.com.br/')[1].split('/')[0]
+        topic = self.__get_topic_from_url(url)
         photo = article.a.img.get('src') if article.a.img else None
         title = article.a.text.strip()
         hat = article.a.span.text.capitalize() if article.a.span else None
@@ -44,13 +46,20 @@ class CnnBrasilWebcrawler(Webcrawler):
             'url': url,
         }
 
+    def __get_topic_from_url(self, url: str) -> str:
+        url_path = unquote(urlparse(url).path)
+        url_path_parts = [p for p in url_path.split('/') if p]
+        topic = url_path_parts[0]
+
+        return topic
+
     def __get_intern_article_data(self, url: str) -> tuple:
         html = get(url)
         soup = BeautifulSoup(html.text, features='html.parser')
 
         author_group = soup.find('span', class_='author__group')
 
-        if not author_group:
+        if not author_group or not author_group.a:
             return (None, None)
 
         author = author_group.a.text
