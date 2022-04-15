@@ -1,8 +1,8 @@
+from dagster import op
+
 from src.interfaces.loader import DatabaseLoader
 from src.interfaces.parser import Parser
 from src.interfaces.webcrawler import Webcrawler
-
-from dagster import op
 
 
 @op
