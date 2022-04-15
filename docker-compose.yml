@@ -6,6 +6,7 @@ services:
       context: .
       dockerfile: ./docker/development/Dockerfile
     tty: true
+    command: /bin/sh "dagit.sh"
     working_dir: /scrapper
     volumes:
       - ./:/scrapper:Z
@@ -13,6 +14,8 @@ services:
       - .env
     depends_on:
       - mongo
+    ports:
+      - 3000:3000
     networks:
       - backend
 
