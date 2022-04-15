@@ -1,3 +1,5 @@
+from urllib.parse import unquote, urlparse
+
 from requests import get
 from bs4 import BeautifulSoup
 
@@ -23,7 +25,7 @@ class GloboWebcrawler(Webcrawler):
         hat = article.span.text
         title = article.a.text
         url = article.a.get('href')
-        topic = url.split(self.url)[1].split('/')[0]
+        topic = self.__get_topic_from_url(url)
         photo = article.img.get('src') if article.img else None
 
         return {
@@ -34,3 +36,10 @@ class GloboWebcrawler(Webcrawler):
             'topic': topic,
             'url': url,
         }
+
+    def __get_topic_from_url(self, url: str) -> str:
+        url_path = unquote(urlparse(url).path)
+        url_path_parts = [p for p in url_path.split('/') if p]
+        topic = url_path_parts[0]
+
+        return topic
