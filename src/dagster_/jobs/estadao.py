@@ -1,6 +1,6 @@
 from dagster import op, job
 
-from src.database.loaders.mongo import MongoClient
+from src.database.loaders.mongo import MongoLoader
 from src.tasks.estadao.extractor import EstadaoWebcrawler
 from src.tasks.estadao.parser import EstadaoParser
 
@@ -17,6 +17,6 @@ def estadao_job():
 
     @op
     def load_estadao(data: list[dict]) -> None:
-        MongoClient().load('news', data)
+        MongoLoader().load('news', data)
 
     load_estadao(parse_estadao(extract_estadao()))

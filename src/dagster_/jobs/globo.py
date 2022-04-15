@@ -1,6 +1,6 @@
 from dagster import op, job
 
-from src.database.loaders.mongo import MongoClient
+from src.database.loaders.mongo import MongoLoader
 from src.tasks.globo.extractor import GloboWebcrawler
 from src.tasks.globo.parser import GloboParser
 
@@ -17,6 +17,6 @@ def globo_job():
 
     @op
     def load_globo(data: list[dict]) -> None:
-        MongoClient().load('news', data)
+        MongoLoader().load('news', data)
 
     load_globo(parse_globo(extract_globo()))
