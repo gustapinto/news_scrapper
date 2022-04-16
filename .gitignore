@@ -129,4 +129,12 @@ dmypy.json
 .pyre/
 
 db/
+nohup.out
+
+# Dagster stuff
 tmp*/
+.telemetry/
+.logs*/
+history/
+schedules/
+storage/
