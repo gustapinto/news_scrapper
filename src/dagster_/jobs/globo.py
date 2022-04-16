@@ -1,4 +1,4 @@
-from dagster import op, job
+from dagster import op, job, ScheduleDefinition
 
 from src.database.loaders.mongo import MongoLoader
 from src.tasks.globo.extractor import GloboWebcrawler
@@ -20,3 +20,7 @@ def globo_job():
         MongoLoader().load('news', data)
 
     load_globo(parse_globo(extract_globo()))
+
+
+globo_job_schedule = ScheduleDefinition(job=globo_job,
+                                        cron_schedule='0 */6 * * *')

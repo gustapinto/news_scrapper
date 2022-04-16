@@ -1,4 +1,4 @@
-from dagster import op, job
+from dagster import op, job, ScheduleDefinition
 
 from src.database.loaders.mongo import MongoLoader
 from src.tasks.cnnbrasil.extractor import CnnBrasilWebcrawler
@@ -20,3 +20,7 @@ def cnnbrasil_job():
         MongoLoader().load('news', data)
 
     load_cnnbrasil(parse_cnnbrasil(extract_cnnbrasil()))
+
+
+cnnbrasil_job_schedule = ScheduleDefinition(job=cnnbrasil_job,
+                                            cron_schedule='0 */6 * * *')
