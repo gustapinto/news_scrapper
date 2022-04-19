@@ -6,6 +6,7 @@ services:
       context: .
       dockerfile: ./docker/production/Dockerfile
     tty: true
+    restart: always
     command: /bin/sh "dagit.sh"
     working_dir: /scrapper
     volumes:
